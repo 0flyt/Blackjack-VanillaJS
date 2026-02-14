@@ -1,4 +1,5 @@
-import { login, create } from '../auth/auth.js';
+import { login } from '../auth/auth.js';
+import { createErrorMessage } from './components/alert.js';
 
 export function renderLogin(showNewUser) {
   let container = document.createElement('div');
@@ -10,6 +11,9 @@ export function renderLogin(showNewUser) {
   let inputName = document.createElement('input');
   inputName.placeholder = 'Enter name or email';
   inputName.id = 'login-name';
+  inputName.addEventListener('input', () => {
+    error.hide();
+  });
 
   let labelPassword = document.createElement('label');
   labelPassword.innerText = 'Password:';
@@ -18,6 +22,11 @@ export function renderLogin(showNewUser) {
   inputPassword.placeholder = '****';
   inputPassword.id = 'login-password';
   inputPassword.type = 'password';
+  inputPassword.addEventListener('input', () => {
+    error.hide();
+  });
+
+  let error = createErrorMessage();
 
   let createAccount = document.createElement('p');
   createAccount.innerText = 'Got no account? Click here!';
@@ -33,67 +42,21 @@ export function renderLogin(showNewUser) {
     const name = inputName.value;
     const password = inputPassword.value;
 
-    login(name, password);
+    const result = login(name, password);
+
+    if (!result.success) {
+      error.show(result.message);
+      return;
+    }
   });
 
   container.append(
+    error.element,
     labelName,
     inputName,
     labelPassword,
     inputPassword,
     createAccount,
-    inputSubmit,
-  );
-
-  return container;
-}
-
-export function renderNewUser(showLogin) {
-  let container = document.createElement('div');
-  container.id = 'login-container';
-
-  let labelName = document.createElement('label');
-  labelName.innerText = 'Name:';
-
-  let inputName = document.createElement('input');
-  inputName.placeholder = 'Enter a username';
-  inputName.id = 'create-name';
-
-  let labelEmail = document.createElement('label');
-  labelEmail.innerText = 'Email:';
-
-  let inputEmail = document.createElement('input');
-  inputEmail.placeholder = 'Enter email';
-  inputEmail.id = 'create-email';
-
-  let labelPassword = document.createElement('label');
-  labelPassword.innerText = 'Password:';
-
-  let inputPassword = document.createElement('input');
-  inputPassword.placeholder = '****';
-  inputPassword.id = 'login-password';
-  inputPassword.type = 'password';
-
-  let inputSubmit = document.createElement('button');
-  inputSubmit.innerText = 'Create user';
-  inputSubmit.id = 'create-button';
-  inputSubmit.addEventListener('click', () => {
-    const name = inputName.value;
-    const email = inputEmail.value;
-    const password = inputPassword.value;
-
-    create(name, email, password);
-
-    showLogin();
-  });
-
-  container.append(
-    labelName,
-    inputName,
-    labelEmail,
-    inputEmail,
-    labelPassword,
-    inputPassword,
     inputSubmit,
   );
 

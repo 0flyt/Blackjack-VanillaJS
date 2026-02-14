@@ -16,3 +16,10 @@
   grid-column: 1 / -1;
   justify-self: right;
 }
+
+.error-message {
+  grid-column: 1/-1;
+  justify-self: center;
+  color: red;
+  min-height: 20px;
+}

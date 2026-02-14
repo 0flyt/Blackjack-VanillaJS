@@ -4,27 +4,26 @@ export function login(name, password) {
   const user = getUser(name);
 
   if (!user) {
-    console.log('User not found');
-    return false;
+    return { success: false, message: 'User not found' };
   }
 
   if (user.password !== password) {
-    console.log('Wrong password');
-    return false;
+    return { success: false, message: 'Wrong password' };
   }
 
   console.log('Login success');
-  return true;
+  return { success: true, user };
 }
 
-export function create(name, email, password) {
-  const user = createUser(name, email, password);
+export function create(name, email, password, pot) {
+  const existingUser = getUser(name) || getUser(email);
 
-  if (user) {
-    console.log('User already exist');
-    return false;
+  if (existingUser) {
+    return { success: false, message: 'User already exists' };
   }
 
+  createUser(name, email, password, pot);
+
   console.log('User created');
-  return true;
+  return { success: true };
 }

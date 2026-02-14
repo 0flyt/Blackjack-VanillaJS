@@ -1,15 +1,16 @@
-import { renderLogin, renderNewUser } from './ui/loginView.js';
+import { renderLogin } from './ui/loginView.js';
+import { registerUser } from './ui/registerView.js';
 
 const app = document.querySelector('#app');
 
 const showLogin = () => {
   app.innerHTML = '';
-  app.appendChild(renderLogin(showNewUser));
+  app.appendChild(renderLogin(showRegisterUser));
 };
 
-const showNewUser = () => {
+const showRegisterUser = () => {
   app.innerHTML = '';
-  app.appendChild(renderNewUser(showLogin));
+  app.appendChild(registerUser(showLogin));
 };
 
 showLogin();
