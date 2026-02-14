@@ -1,0 +1,18 @@
+#login-container {
+  padding: 20px;
+  width: fit-content;
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 10px;
+}
+
+#create-account {
+  grid-column: 1 / -1;
+  justify-self: right;
+  font-size: 14px;
+}
+
+#login-container button {
+  grid-column: 1 / -1;
+  justify-self: right;
+}
