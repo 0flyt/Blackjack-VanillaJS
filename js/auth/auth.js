@@ -1,4 +1,4 @@
-import { getUser, createUser } from '../services/storage.js';
+import { getUser, createUser, setCurrentUser } from '../services/storage.js';
 
 export function login(name, password) {
   const user = getUser(name);
@@ -11,8 +11,12 @@ export function login(name, password) {
     return { success: false, message: 'Wrong password' };
   }
 
-  console.log('Login success');
+  setCurrentUser(user);
   return { success: true, user };
+}
+
+export function logout() {
+  setCurrentUser('');
 }
 
 export function create(name, email, password, pot) {

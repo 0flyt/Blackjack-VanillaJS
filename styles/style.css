@@ -12,6 +12,10 @@
   font-size: 14px;
 }
 
+#login-container input:invalid {
+  border: 2px dashed red;
+}
+
 #login-container button {
   grid-column: 1 / -1;
   justify-self: right;
