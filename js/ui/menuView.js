@@ -1,6 +1,6 @@
 import { getCurrentUser, setCurrentUser } from '../services/storage.js';
 
-export function renderMenu(showLogin) {
+export function renderMenu(showLogin, showGame) {
   const user = getCurrentUser();
 
   let container = document.createElement('div');
@@ -17,7 +17,18 @@ export function renderMenu(showLogin) {
   header.id = 'menu-header';
   header.innerText = `Welcome, ${user.name} | Balance: ${user.pot}`;
 
-  container.append(logoutButton, header);
+  let addToPotButton = document.createElement('button');
+  addToPotButton.id = 'add-to-pot-button';
+  addToPotButton.innerText = 'Add funds';
+
+  let startGameButton = document.createElement('button');
+  startGameButton.id = 'start-game-button';
+  startGameButton.innerText = 'Start game';
+  startGameButton.addEventListener('click', () => {
+    showGame();
+  });
+
+  container.append(logoutButton, header, addToPotButton, startGameButton);
 
   return container;
 }

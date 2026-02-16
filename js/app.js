@@ -1,4 +1,5 @@
 import { getCurrentUser } from './services/storage.js';
+import { renderGameView } from './ui/gameView.js';
 import { renderLogin } from './ui/loginView.js';
 import { renderMenu } from './ui/menuView.js';
 import { registerUser } from './ui/registerView.js';
@@ -17,7 +18,12 @@ const showRegisterUser = () => {
 
 const showMenuView = () => {
   app.innerHTML = '';
-  app.appendChild(renderMenu(showLogin));
+  app.appendChild(renderMenu(showLogin, showGame));
+};
+
+const showGame = () => {
+  app.innerHTML = '';
+  app.appendChild(renderGameView());
 };
 
 const currentUser = getCurrentUser();

@@ -1,6 +1,5 @@
 import { login } from '../auth/auth.js';
 import { createErrorMessage } from './components/alert.js';
-import { renderMenu } from './menuView.js';
 
 export function renderLogin(showNewUser, showMenu) {
   let container = document.createElement('div');
