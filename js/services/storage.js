@@ -27,7 +27,16 @@ export function getCurrentUserPot() {
   return getUser(getCurrentUser().email).pot;
 }
 
-// export function updateUserPot() {
-//     const user = getUser(getCurrentUser().email)
-//     localStorage.setItem('')
-// }
+export function updatePotInStorage(newPot) {
+  const currentUser = getCurrentUser();
+  const users = getUsers();
+
+  const updatedUsers = users.map((user) =>
+    user.email === currentUser.email ? { ...user, pot: newPot } : user,
+  );
+
+  localStorage.setItem('users', JSON.stringify(updatedUsers));
+
+  const updatedCurrentUser = { ...currentUser, pot: newPot };
+  localStorage.setItem('currentUser', JSON.stringify(updatedCurrentUser));
+}

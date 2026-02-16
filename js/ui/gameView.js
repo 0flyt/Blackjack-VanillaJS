@@ -1,4 +1,5 @@
 import { BlackjackGame } from '../game/BlackjackGame.js';
+import { updatePotInStorage } from '../services/storage.js';
 
 let game;
 
@@ -89,7 +90,6 @@ export function renderGameView() {
   const finishedSection = document.createElement('div');
 
   const resultText = document.createElement('h3');
-  resultText.innerText = 'who won text here later';
 
   finishedSection.append(resultText);
 
@@ -108,6 +108,7 @@ export function renderGameView() {
     }
 
     if (game.phase === 'finished') {
+      updatePotInStorage(game.pot);
       renderResult();
     }
 
