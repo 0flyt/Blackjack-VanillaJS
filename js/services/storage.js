@@ -23,6 +23,10 @@ export function getCurrentUser() {
   return JSON.parse(localStorage.getItem('currentUser'));
 }
 
+export function getCurrentUserPot() {
+  return getUser(getCurrentUser().email).pot;
+}
+
 // export function updateUserPot() {
 //     const user = getUser(getCurrentUser().email)
 //     localStorage.setItem('')

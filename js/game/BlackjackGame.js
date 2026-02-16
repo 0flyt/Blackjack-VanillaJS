@@ -1,12 +1,19 @@
+import { getCurrentUserPot } from '../services/storage.js';
+
 export class BlackjackGame {
   constructor() {
+    this.pot = getCurrentUserPot();
+    this.resetRound();
+  }
+
+  resetRound() {
     this.deck = this.createDeck();
+    this.shuffleDeck();
     this.playerHand = [];
     this.dealerHand = [];
-    this.pot = 0;
-    this.finished = false;
-
-    this.shuffleDeck();
+    this.bet = 0;
+    this.phase = 'betting';
+    this.result = null;
   }
 
   createDeck() {
@@ -75,20 +82,57 @@ export class BlackjackGame {
     return this.calculateScore(this.dealerHand);
   }
 
-  start() {
+  start(bet) {
+    this.bet = bet;
+    this.pot -= bet;
+    this.phase = 'playing';
     this.dealCard(this.playerHand);
     this.dealCard(this.dealerHand);
     this.dealCard(this.playerHand);
     this.dealCard(this.dealerHand);
+
+    if (this.getPlayerScore() === 21) {
+      this.stand();
+    }
   }
 
   hit() {
+    if (this.phase !== 'playing') return;
     this.dealCard(this.playerHand);
+
+    if (this.getPlayerScore() > 21) {
+      this.endRound('dealer');
+    }
   }
 
   stand() {
-    if (this.calculateScore(this.dealerHand) < 21) {
+    if (this.phase !== 'playing') return;
+
+    while (this.getDealerScore() < 17) {
       this.dealCard(this.dealerHand);
+    }
+    let dealer = this.getDealerScore();
+    let player = this.getPlayerScore();
+
+    if (dealer > 21 || player > dealer) {
+      this.endRound('player');
+    } else if (player === dealer) {
+      this.endRound('draw');
+    } else {
+      this.endRound('dealer');
+    }
+  }
+
+  endRound(winner) {
+    this.phase = 'finished';
+    this.result = winner;
+
+    if (winner === 'player') {
+      this.pot += this.bet * 2;
+    }
+
+    if (winner === 'draw') {
+      this.pot += this.bet;
     }
   }
 }
