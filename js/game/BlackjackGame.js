@@ -13,6 +13,7 @@ export class BlackjackGame {
     this.dealerHand = [];
     this.bet = 0;
     this.phase = 'betting';
+    this.hiddenCard = true;
     this.result = null;
   }
 

@@ -1,5 +1,6 @@
 import { BlackjackGame } from '../game/BlackjackGame.js';
 import { updatePotInStorage } from '../services/storage.js';
+import { renderHiddenCard, renderCard } from '../utils/dom.js';
 
 let game;
 
@@ -48,7 +49,9 @@ export function renderGameView() {
   const dealerList = document.createElement('ul');
   dealerList.id = 'dealer-hand';
 
-  dealerContainer.append(dealerLabel, dealerScore, dealerList);
+  const dealerHand = document.createElement('div');
+
+  dealerContainer.append(dealerLabel, dealerScore, dealerList, dealerHand);
 
   const playerContainer = document.createElement('div');
   playerContainer.id = 'player-container';
@@ -62,7 +65,9 @@ export function renderGameView() {
   const playerList = document.createElement('ul');
   playerList.id = 'player-hand';
 
-  playerContainer.append(playerLabel, playerScore, playerList);
+  const playerHand = document.createElement('div');
+
+  playerContainer.append(playerLabel, playerScore, playerList, playerHand);
 
   const hitButton = document.createElement('button');
   hitButton.innerText = 'Hit';
@@ -122,6 +127,12 @@ export function renderGameView() {
         const li = document.createElement('li');
         li.innerText = `${card.name}${card.suit}`;
         dealerList.appendChild(li);
+        if (game.hiddenCard) {
+          dealerHand.appendChild(renderHiddenCard());
+          game.hiddenCard = false;
+          continue;
+        }
+        dealerHand.appendChild(renderCard(card, 'large'));
       }
 
       playerList.innerHTML = '';
@@ -131,6 +142,7 @@ export function renderGameView() {
         const li = document.createElement('li');
         li.innerText = `${card.name}${card.suit}`;
         playerList.appendChild(li);
+        playerHand.appendChild(renderCard(card));
       }
     }
 
