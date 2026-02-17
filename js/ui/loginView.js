@@ -2,6 +2,7 @@ import { login } from '../auth/auth.js';
 import { createErrorMessage } from './components/alert.js';
 
 export function renderLogin(showNewUser, showMenu) {
+  document.body.classList.add('login-mode');
   let container = document.createElement('div');
   container.id = 'login-container';
 

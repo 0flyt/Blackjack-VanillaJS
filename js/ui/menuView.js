@@ -1,6 +1,7 @@
 import { getCurrentUser, setCurrentUser } from '../services/storage.js';
 
 export function renderMenu(showLogin, showGame) {
+  document.body.classList.remove('login-mode');
   const user = getCurrentUser();
 
   let container = document.createElement('div');
