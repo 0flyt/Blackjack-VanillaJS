@@ -9,47 +9,67 @@ export function renderGameView() {
   game.phase = 'betting';
 
   const gameContainer = document.createElement('div');
+  gameContainer.id = 'game-container';
 
   const betSection = document.createElement('div');
+  betSection.id = 'bet-section';
 
-  const betLabel = document.createElement('label');
-  betLabel.innerText = 'What you betting?';
+  function renderBetTokens() {
+    const betTokens = [1, 5, 10, 25, 100];
+    const container = document.createElement('div');
+    container.id = 'bet-container';
 
-  const betInput = document.createElement('input');
-  betInput.type = 'number';
+    betTokens.forEach((value) => {
+      const token = document.createElement('div');
+      token.className = 'bet-token';
+      token.innerText = value;
+
+      token.addEventListener('click', () => {
+        if (game.phase !== 'betting') return;
+        if (game.bet + value > game.pot) return;
+
+        game.bet += value;
+        updateUI();
+      });
+      container.appendChild(token);
+    });
+    return container;
+  }
 
   const betSubmit = document.createElement('button');
   betSubmit.innerText = 'Lets go';
   betSubmit.addEventListener('click', () => {
-    const bet = Number(betInput.value);
+    const bet = game.bet;
     if (bet <= 0 || bet > game.pot) return;
-    game.bet = bet;
-    game.start(betInput.value);
+    game.start(bet);
     game.phase = 'playing';
     updateUI();
   });
 
-  betSection.append(betLabel, betInput, betSubmit);
+  betSection.append(renderBetTokens(), betSubmit);
 
   const playingSection = document.createElement('div');
+  playingSection.id = 'playing-section';
 
-  const currentPot = document.createElement('div');
-  currentPot.id = 'current-pot';
-  currentPot.innerText = game.pot;
+  //   const currentPot = document.createElement('div');
+  //   currentPot.id = 'current-pot';
+  //   currentPot.innerText = game.pot;
 
   const dealerContainer = document.createElement('div');
   dealerContainer.id = 'dealer-container';
 
-  const dealerLabel = document.createElement('label');
-  dealerLabel.innerText = 'Dealer hand:';
-
-  const dealerScore = document.createElement('p');
+  const dealerScore = document.createElement('div');
   dealerScore.id = 'dealer-score';
+  dealerScore.className = 'score-tag';
 
   const dealerHand = document.createElement('div');
   dealerHand.id = 'dealer-hand';
+  dealerHand.className = 'hand';
 
-  dealerContainer.append(dealerLabel, dealerScore, dealerHand);
+  const dealerCardZone = document.createElement('div');
+  dealerCardZone.className = 'card-zone';
+
+  dealerContainer.append(dealerScore, dealerHand, dealerCardZone);
 
   const playerContainer = document.createElement('div');
   playerContainer.id = 'player-container';
@@ -83,7 +103,6 @@ export function renderGameView() {
   hitButton.innerText = 'Hit';
   hitButton.addEventListener('click', () => {
     game.hit();
-    console.log(game.phase);
     updateUI();
   });
 
@@ -91,12 +110,11 @@ export function renderGameView() {
   standButton.innerText = 'Stand';
   standButton.addEventListener('click', () => {
     game.stand();
-
     updateUI();
   });
 
   playingSection.append(
-    currentPot,
+    // currentPot,
     dealerContainer,
     playerContainer,
     hitButton,
@@ -104,20 +122,42 @@ export function renderGameView() {
   );
 
   const finishedSection = document.createElement('div');
+  finishedSection.id = 'finished-section';
 
   const resultText = document.createElement('h3');
 
   finishedSection.append(resultText);
 
-  gameContainer.append(betSection, playingSection, finishedSection);
+  const bottomSection = document.createElement('div');
+  bottomSection.id = 'bottom-section';
+
+  const bottomBalance = document.createElement('div');
+  bottomBalance.id = 'bottom-balance';
+  bottomBalance.className = 'bottom-currency-slot';
+
+  const bottomInfoText = document.createElement('div');
+  bottomInfoText.id = 'bottom-info';
+
+  const bottomBet = document.createElement('div');
+  bottomBet.id = 'bottom-bet';
+  bottomBet.className = 'bottom-currency-slot';
+
+  bottomSection.append(bottomBalance, bottomInfoText, bottomBet);
+
+  gameContainer.append(
+    playingSection,
+    finishedSection,
+    betSection,
+    bottomSection,
+  );
 
   function updateUI() {
-    betSection.style.display = game.phase === 'betting' ? 'block' : 'none';
+    // betSection.style.display = game.phase === 'betting' ? 'block' : 'none';
 
-    playingSection.style.display = game.phase === 'playing' ? 'block' : 'none';
+    // playingSection.style.display = game.phase === 'playing' ? 'block' : 'none';
 
-    finishedSection.style.display =
-      game.phase === 'finished' ? 'block' : 'none';
+    // finishedSection.style.display =
+    //   game.phase === 'finished' ? 'block' : 'none';
 
     renderHands();
 
@@ -127,8 +167,7 @@ export function renderGameView() {
     }
 
     function renderHands() {
-      console.log(game.phase);
-      currentPot.innerText = game.pot;
+      //   currentPot.innerText = game.pot;
 
       dealerHand.innerHTML = '';
       dealerScore.innerText = game.getDealerScore();
@@ -137,8 +176,10 @@ export function renderGameView() {
         let img;
         if (game.hiddenCard && index === 1 && game.phase === 'playing') {
           img = renderHiddenCard();
+          img.style.left = `${index * 60}px`;
         } else {
           img = renderCard(card, 'large');
+          img.style.left = `${index * 60}px`;
         }
         img.style.left = `${index * 60}px`;
         dealerHand.appendChild(img);

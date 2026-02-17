@@ -80,7 +80,10 @@ export class BlackjackGame {
   }
 
   getDealerScore() {
-    return this.calculateScore(this.dealerHand);
+    if (!this.dealerHand.length) return 0;
+    return this.calculateScore(
+      this.hiddenCard ? this.dealerHand.slice(0, 1) : this.dealerHand,
+    );
   }
 
   start(bet) {
@@ -108,6 +111,8 @@ export class BlackjackGame {
 
   stand() {
     if (this.phase !== 'playing') return;
+
+    this.hiddenCard = false;
 
     while (this.getDealerScore() < 17) {
       this.dealCard(this.dealerHand);

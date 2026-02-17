@@ -1,3 +1,9 @@
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
 #background {
   background: radial-gradient(circle at center, #0f5f2e, #06351a);
   inset: 0;
@@ -77,11 +83,39 @@ body.login-mode::before {
   min-height: 20px;
 }
 
-#player-container {
+#game-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+#bet-section,
+#playing-section,
+#finished-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#playing-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+#player-container,
+#dealer-container {
   position: relative;
   width: 240px;
   height: 150px;
-  margin: 60px auto;
+  margin: 0px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .score-tag {
@@ -150,6 +184,65 @@ body.login-mode::before {
   bottom: -75px;
   left: 50%;
   transform: translateX(-50%);
+}
+
+#bet-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.bet-token {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px dashed rgba(255, 255, 255, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s ease;
+}
+
+.bet-token:hover {
+  transform: scale(1.1);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+#bottom-section {
+  height: 70px;
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 40px;
+
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  color: white;
+}
+
+.bottom-currency-slot {
+  min-width: 120px;
+  padding: 8px 16px;
+
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+#bottom-info {
+  font-size: 16px;
+  opacity: 0.9;
+  text-align: center;
+  flex: 1;
 }
 
 @keyframes fadeIn {
