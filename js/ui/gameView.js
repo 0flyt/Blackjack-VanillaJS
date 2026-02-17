@@ -46,33 +46,44 @@ export function renderGameView() {
   const dealerScore = document.createElement('p');
   dealerScore.id = 'dealer-score';
 
-  const dealerList = document.createElement('ul');
-  dealerList.id = 'dealer-hand';
-
   const dealerHand = document.createElement('div');
+  dealerHand.id = 'dealer-hand';
 
-  dealerContainer.append(dealerLabel, dealerScore, dealerList, dealerHand);
+  dealerContainer.append(dealerLabel, dealerScore, dealerHand);
 
   const playerContainer = document.createElement('div');
   playerContainer.id = 'player-container';
 
-  const playerLabel = document.createElement('label');
-  playerLabel.innerText = 'Player hand:';
-
-  const playerScore = document.createElement('p');
+  const playerScore = document.createElement('div');
   playerScore.id = 'player-score';
-
-  const playerList = document.createElement('ul');
-  playerList.id = 'player-hand';
+  playerScore.className = 'score-tag';
 
   const playerHand = document.createElement('div');
+  playerHand.id = 'player-hand';
+  playerHand.className = 'hand';
 
-  playerContainer.append(playerLabel, playerScore, playerList, playerHand);
+  const playerCardZone = document.createElement('div');
+  playerCardZone.className = 'card-zone';
+
+  const playerBetValue = document.createElement('div');
+  playerBetValue.className = 'bet-tag';
+
+  const playerBetZone = document.createElement('div');
+  playerBetZone.className = 'bet-zone';
+
+  playerContainer.append(
+    playerScore,
+    playerHand,
+    playerCardZone,
+    playerBetValue,
+    playerBetZone,
+  );
 
   const hitButton = document.createElement('button');
   hitButton.innerText = 'Hit';
   hitButton.addEventListener('click', () => {
     game.hit();
+    console.log(game.phase);
     updateUI();
   });
 
@@ -108,9 +119,7 @@ export function renderGameView() {
     finishedSection.style.display =
       game.phase === 'finished' ? 'block' : 'none';
 
-    if (game.phase === 'playing') {
-      renderHands();
-    }
+    renderHands();
 
     if (game.phase === 'finished') {
       updatePotInStorage(game.pot);
@@ -118,32 +127,33 @@ export function renderGameView() {
     }
 
     function renderHands() {
+      console.log(game.phase);
       currentPot.innerText = game.pot;
 
-      dealerList.innerHTML = '';
+      dealerHand.innerHTML = '';
       dealerScore.innerText = game.getDealerScore();
 
-      for (let card of game.dealerHand) {
-        const li = document.createElement('li');
-        li.innerText = `${card.name}${card.suit}`;
-        dealerList.appendChild(li);
-        if (game.hiddenCard) {
-          dealerHand.appendChild(renderHiddenCard());
-          game.hiddenCard = false;
-          continue;
+      game.dealerHand.forEach((card, index) => {
+        let img;
+        if (game.hiddenCard && index === 1 && game.phase === 'playing') {
+          img = renderHiddenCard();
+        } else {
+          img = renderCard(card, 'large');
         }
-        dealerHand.appendChild(renderCard(card, 'large'));
-      }
+        img.style.left = `${index * 60}px`;
+        dealerHand.appendChild(img);
+      });
 
-      playerList.innerHTML = '';
+      playerHand.innerHTML = '';
       playerScore.innerText = game.getPlayerScore();
 
-      for (let card of game.playerHand) {
-        const li = document.createElement('li');
-        li.innerText = `${card.name}${card.suit}`;
-        playerList.appendChild(li);
-        playerHand.appendChild(renderCard(card));
-      }
+      game.playerHand.forEach((card, index) => {
+        const img = renderCard(card);
+        img.style.left = `${index * 60}px`;
+        playerHand.appendChild(img);
+      });
+
+      playerBetValue.innerText = game.bet;
     }
 
     function renderResult() {

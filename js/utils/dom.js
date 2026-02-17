@@ -25,6 +25,7 @@ export function renderCard(card, size = 'large') {
   img.src = `./assets/cards/${size}/${card.name}_of_${card.suit}.png`;
   img.alt = `${card.name} of ${card.suit}`;
   img.style.margin = '5px';
+  img.style.left = '60px';
   img.classList.add('card', size);
   if (size === 'large') {
     img.style.width = '100px';
