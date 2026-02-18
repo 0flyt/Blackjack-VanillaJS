@@ -51,10 +51,6 @@ export function renderGameView() {
   const playingSection = document.createElement('div');
   playingSection.id = 'playing-section';
 
-  //   const currentPot = document.createElement('div');
-  //   currentPot.id = 'current-pot';
-  //   currentPot.innerText = game.pot;
-
   const dealerContainer = document.createElement('div');
   dealerContainer.id = 'dealer-container';
 
@@ -114,7 +110,6 @@ export function renderGameView() {
   });
 
   playingSection.append(
-    // currentPot,
     dealerContainer,
     playerContainer,
     hitButton,
@@ -131,18 +126,31 @@ export function renderGameView() {
   const bottomSection = document.createElement('div');
   bottomSection.id = 'bottom-section';
 
+  const bottomBalanceText = document.createElement('div');
+  bottomBalanceText.className = 'bottom-currency-slot';
+  bottomBalanceText.innerText = 'Balance:';
+
   const bottomBalance = document.createElement('div');
   bottomBalance.id = 'bottom-balance';
-  bottomBalance.className = 'bottom-currency-slot';
+
+  bottomBalance.innerText = game.pot;
+
+  bottomBalanceText.appendChild(bottomBalance);
 
   const bottomInfoText = document.createElement('div');
   bottomInfoText.id = 'bottom-info';
 
+  const bottomBetText = document.createElement('div');
+  bottomBetText.className = 'bottom-currency-slot';
+  bottomBetText.innerText = 'Bet:';
+
   const bottomBet = document.createElement('div');
   bottomBet.id = 'bottom-bet';
-  bottomBet.className = 'bottom-currency-slot';
+  bottomBet.innerText = game.bet;
 
-  bottomSection.append(bottomBalance, bottomInfoText, bottomBet);
+  bottomBetText.appendChild(bottomBet);
+
+  bottomSection.append(bottomBalanceText, bottomInfoText, bottomBetText);
 
   gameContainer.append(
     playingSection,
@@ -152,13 +160,6 @@ export function renderGameView() {
   );
 
   function updateUI() {
-    // betSection.style.display = game.phase === 'betting' ? 'block' : 'none';
-
-    // playingSection.style.display = game.phase === 'playing' ? 'block' : 'none';
-
-    // finishedSection.style.display =
-    //   game.phase === 'finished' ? 'block' : 'none';
-
     renderHands();
 
     if (game.phase === 'finished') {
@@ -167,7 +168,8 @@ export function renderGameView() {
     }
 
     function renderHands() {
-      //   currentPot.innerText = game.pot;
+      bottomBalance.innerText = game.pot;
+      bottomBet.innerText = game.bet;
 
       dealerHand.innerHTML = '';
       dealerScore.innerText = game.getDealerScore();

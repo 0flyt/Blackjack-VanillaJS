@@ -105,6 +105,7 @@ export class BlackjackGame {
     this.dealCard(this.playerHand);
 
     if (this.getPlayerScore() > 21) {
+      this.hiddenCard = false;
       this.endRound('dealer');
     }
   }
