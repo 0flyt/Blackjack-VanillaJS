@@ -38,6 +38,7 @@ export function renderGameView() {
 
   const betSubmit = document.createElement('button');
   betSubmit.innerText = 'Lets go';
+  betSubmit.className = 'game-button bet-button';
   betSubmit.addEventListener('click', () => {
     const bet = game.bet;
     if (bet <= 0 || bet > game.pot) return;
@@ -97,6 +98,7 @@ export function renderGameView() {
 
   const hitButton = document.createElement('button');
   hitButton.innerText = 'Hit';
+  hitButton.className = 'game-button hit-button';
   hitButton.addEventListener('click', () => {
     game.hit();
     updateUI();
@@ -104,24 +106,33 @@ export function renderGameView() {
 
   const standButton = document.createElement('button');
   standButton.innerText = 'Stand';
+  standButton.className = 'game-button stand-button';
   standButton.addEventListener('click', () => {
     game.stand();
     updateUI();
   });
 
-  playingSection.append(
-    dealerContainer,
-    playerContainer,
-    hitButton,
-    standButton,
-  );
+  const actionContainer = document.createElement('div');
+  actionContainer.id = 'action-container';
+
+  actionContainer.append(hitButton, standButton);
+
+  playingSection.append(dealerContainer, playerContainer, actionContainer);
 
   const finishedSection = document.createElement('div');
   finishedSection.id = 'finished-section';
 
   const resultText = document.createElement('h3');
 
-  finishedSection.append(resultText);
+  const playAgainButton = document.createElement('button');
+  playAgainButton.innerText = 'Play Again';
+  playAgainButton.className = 'game-button play-button';
+  playAgainButton.addEventListener('click', () => {
+    game.resetRound();
+    updateUI();
+  });
+
+  finishedSection.append(resultText, playAgainButton);
 
   const bottomSection = document.createElement('div');
   bottomSection.id = 'bottom-section';
@@ -160,29 +171,46 @@ export function renderGameView() {
   );
 
   function updateUI() {
-    renderHands();
+    betSection.style.display = game.phase === 'betting' ? 'flex' : 'none';
+    playingSection.style.display = game.phase === 'playing' ? 'flex' : 'none';
+    finishedSection.style.display = game.phase === 'finished' ? 'flex' : 'none';
+
+    hitButton.style.display =
+      game.phase === 'playing' ? 'inline-block' : 'none';
+    standButton.style.display =
+      game.phase === 'playing' ? 'inline-block' : 'none';
+
+    bottomBalance.innerText = game.pot;
+    bottomBet.innerText = game.bet;
+
+    if (game.phase === 'betting') {
+      bottomInfoText.innerText = 'Place your bet';
+    }
+
+    if (game.phase === 'playing') {
+      bottomInfoText.innerText = 'Your move';
+    }
+
+    playAgainButton.style.display =
+      game.phase === 'finished' ? 'inline-block' : 'none';
 
     if (game.phase === 'finished') {
-      updatePotInStorage(game.pot);
-      renderResult();
+      bottomInfoText.innerText = 'Round finished';
     }
 
     function renderHands() {
-      bottomBalance.innerText = game.pot;
-      bottomBet.innerText = game.bet;
-
       dealerHand.innerHTML = '';
       dealerScore.innerText = game.getDealerScore();
 
       game.dealerHand.forEach((card, index) => {
         let img;
+
         if (game.hiddenCard && index === 1 && game.phase === 'playing') {
           img = renderHiddenCard();
-          img.style.left = `${index * 60}px`;
         } else {
           img = renderCard(card, 'large');
-          img.style.left = `${index * 60}px`;
         }
+
         img.style.left = `${index * 60}px`;
         dealerHand.appendChild(img);
       });
@@ -199,14 +227,11 @@ export function renderGameView() {
       playerBetValue.innerText = game.bet;
     }
 
-    function renderResult() {
-      if (game.result === 'player') {
-        resultText.innerText = 'You won!';
-      } else if (game.result === 'dealer') {
-        resultText.innerText = 'Dealer won!';
-      } else {
-        resultText.innerText = 'Draw!';
-      }
+    renderHands();
+
+    if (game.phase === 'finished') {
+      updatePotInStorage(game.pot);
+      renderResult();
     }
   }
 

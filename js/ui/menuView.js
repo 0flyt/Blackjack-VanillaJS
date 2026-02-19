@@ -4,32 +4,35 @@ export function renderMenu(showLogin, showGame) {
   document.body.classList.remove('login-mode');
   const user = getCurrentUser();
 
-  let container = document.createElement('div');
+  const container = document.createElement('div');
   container.id = 'menu-container';
 
-  let logoutButton = document.createElement('button');
+  const header = document.createElement('h2');
+  header.id = 'menu-header';
+  header.innerText = `Welcome, ${user.name} | Balance: ${user.pot}`;
+
+  const logoutButton = document.createElement('button');
   logoutButton.innerText = 'Logout';
+  logoutButton.className = 'menu-button';
   logoutButton.addEventListener('click', () => {
     setCurrentUser(null);
     showLogin();
   });
 
-  let header = document.createElement('h2');
-  header.id = 'menu-header';
-  header.innerText = `Welcome, ${user.name} | Balance: ${user.pot}`;
-
-  let addToPotButton = document.createElement('button');
+  const addToPotButton = document.createElement('button');
   addToPotButton.id = 'add-to-pot-button';
   addToPotButton.innerText = 'Add funds';
+  addToPotButton.className = 'menu-button';
 
-  let startGameButton = document.createElement('button');
+  const startGameButton = document.createElement('button');
   startGameButton.id = 'start-game-button';
   startGameButton.innerText = 'Start game';
+  startGameButton.className = 'menu-button';
   startGameButton.addEventListener('click', () => {
     showGame();
   });
 
-  container.append(logoutButton, header, addToPotButton, startGameButton);
+  container.append(header, startGameButton, addToPotButton, logoutButton);
 
   return container;
 }
