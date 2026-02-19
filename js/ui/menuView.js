@@ -1,4 +1,8 @@
-import { getCurrentUser, setCurrentUser } from '../services/storage.js';
+import {
+  getCurrentUser,
+  setCurrentUser,
+  updatePotInStorage,
+} from '../services/storage.js';
 
 export function renderMenu(showLogin, showGame) {
   document.body.classList.remove('login-mode');
@@ -23,6 +27,9 @@ export function renderMenu(showLogin, showGame) {
   addToPotButton.id = 'add-to-pot-button';
   addToPotButton.innerText = 'Add funds';
   addToPotButton.className = 'menu-button';
+  addToPotButton.addEventListener('click', () => {
+    updatePotInStorage(100);
+  });
 
   const startGameButton = document.createElement('button');
   startGameButton.id = 'start-game-button';

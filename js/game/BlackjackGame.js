@@ -94,40 +94,45 @@ export class BlackjackGame {
     this.dealCard(this.dealerHand);
     this.dealCard(this.playerHand);
     this.dealCard(this.dealerHand);
-
-    if (this.getPlayerScore() === 21) {
-      this.stand();
-    }
   }
 
-  hit() {
+  async hit(updateUICallback) {
     if (this.phase !== 'playing') return;
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
     this.dealCard(this.playerHand);
+
+    if (updateUICallback) updateUICallback();
 
     if (this.getPlayerScore() > 21) {
       this.hiddenCard = false;
       this.endRound('dealer');
+      if (updateUICallback) updateUICallback();
     }
   }
 
-  stand() {
+  async stand(updateUICallback) {
     if (this.phase !== 'playing') return;
 
     this.hiddenCard = false;
 
+    if (updateUICallback) updateUICallback();
+    await new Promise((r) => setTimeout(r, 500));
+
     while (this.getDealerScore() < 17) {
       this.dealCard(this.dealerHand);
+      if (updateUICallback) updateUICallback();
+      await new Promise((r) => setTimeout(r, 500));
     }
-    let dealer = this.getDealerScore();
-    let player = this.getPlayerScore();
 
-    if (dealer > 21 || player > dealer) {
-      this.endRound('player');
-    } else if (player === dealer) {
-      this.endRound('draw');
-    } else {
-      this.endRound('dealer');
-    }
+    const dealer = this.getDealerScore();
+    const player = this.getPlayerScore();
+
+    if (dealer > 21 || player > dealer) this.endRound('player');
+    else if (player === dealer) this.endRound('draw');
+    else this.endRound('dealer');
+
+    if (updateUICallback) updateUICallback();
   }
 
   endRound(winner) {

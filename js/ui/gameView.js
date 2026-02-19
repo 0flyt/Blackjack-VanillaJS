@@ -99,17 +99,15 @@ export function renderGameView() {
   const hitButton = document.createElement('button');
   hitButton.innerText = 'Hit';
   hitButton.className = 'game-button hit-button';
-  hitButton.addEventListener('click', () => {
-    game.hit();
-    updateUI();
+  hitButton.addEventListener('click', async () => {
+    await game.hit(updateUI);
   });
 
   const standButton = document.createElement('button');
   standButton.innerText = 'Stand';
   standButton.className = 'game-button stand-button';
-  standButton.addEventListener('click', () => {
-    game.stand();
-    updateUI();
+  standButton.addEventListener('click', async () => {
+    await game.stand(updateUI);
   });
 
   const actionContainer = document.createElement('div');
@@ -172,31 +170,24 @@ export function renderGameView() {
 
   function updateUI() {
     betSection.style.display = game.phase === 'betting' ? 'flex' : 'none';
-    playingSection.style.display = game.phase === 'playing' ? 'flex' : 'none';
-    finishedSection.style.display = game.phase === 'finished' ? 'flex' : 'none';
+
+    playingSection.style.display = 'flex';
 
     hitButton.style.display =
       game.phase === 'playing' ? 'inline-block' : 'none';
     standButton.style.display =
       game.phase === 'playing' ? 'inline-block' : 'none';
 
-    bottomBalance.innerText = game.pot;
-    bottomBet.innerText = game.bet;
-
-    if (game.phase === 'betting') {
-      bottomInfoText.innerText = 'Place your bet';
-    }
-
-    if (game.phase === 'playing') {
-      bottomInfoText.innerText = 'Your move';
-    }
-
     playAgainButton.style.display =
       game.phase === 'finished' ? 'inline-block' : 'none';
 
-    if (game.phase === 'finished') {
+    bottomBalance.innerText = game.pot;
+    bottomBet.innerText = game.bet;
+
+    if (game.phase === 'betting') bottomInfoText.innerText = 'Place your bet';
+    else if (game.phase === 'playing') bottomInfoText.innerText = 'Your move';
+    else if (game.phase === 'finished')
       bottomInfoText.innerText = 'Round finished';
-    }
 
     function renderHands() {
       dealerHand.innerHTML = '';
@@ -225,6 +216,16 @@ export function renderGameView() {
       });
 
       playerBetValue.innerText = game.bet;
+    }
+
+    function renderResult() {
+      if (game.result === 'player') {
+        bottomInfoText.innerText = 'You won!';
+      } else if (game.result === 'dealer') {
+        bottomInfoText.innerText = 'Dealer won!';
+      } else {
+        bottomInfoText.innerText = 'Draw!';
+      }
     }
 
     renderHands();
