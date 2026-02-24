@@ -1,5 +1,6 @@
 import { login } from '../auth/auth.js';
 import { createErrorMessage } from './components/alert.js';
+import { GameBoard } from './components/GameBoard.js';
 
 export function renderLogin(showNewUser, showMenu) {
   document.body.classList.add('login-mode');
@@ -56,6 +57,13 @@ export function renderLogin(showNewUser, showMenu) {
     }
 
     showMenu();
+  });
+
+  const gameBoardContainer = document.createElement('div');
+  document.body.appendChild(gameBoardContainer);
+
+  const board = GameBoard(gameBoardContainer, {
+    mode: 'idle',
   });
 
   container.append(

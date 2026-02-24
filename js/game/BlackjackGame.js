@@ -1,8 +1,7 @@
-import { getCurrentUserPot } from '../services/storage.js';
+import { getCurrentUserPot, updatePotInStorage } from '../services/storage.js';
 
 export class BlackjackGame {
   constructor() {
-    this.pot = getCurrentUserPot();
     this.resetRound();
   }
 
@@ -12,7 +11,9 @@ export class BlackjackGame {
     this.playerHand = [];
     this.dealerHand = [];
     this.bet = 0;
+    this.pot = getCurrentUserPot();
     this.phase = 'betting';
+    this.mode = 'playing';
     this.hiddenCard = true;
     this.result = null;
   }
@@ -55,8 +56,24 @@ export class BlackjackGame {
     }
   }
 
+  addBet(amount) {
+    if (this.phase !== 'betting') return;
+    if (this.bet + amount > this.pot) return;
+
+    this.bet += amount;
+  }
+
+  clearBet() {
+    this.bet = 0;
+  }
+
   dealCard(hand) {
-    hand.push(this.deck.pop());
+    const card = this.deck.pop();
+
+    hand.push({
+      ...card,
+      rotation: Math.random() * 8 - 4,
+    });
   }
 
   calculateScore(hand) {
@@ -86,42 +103,47 @@ export class BlackjackGame {
     );
   }
 
-  start(bet) {
-    this.bet = bet;
-    this.pot -= bet;
-    this.phase = 'playing';
-    this.dealCard(this.playerHand);
-    this.dealCard(this.dealerHand);
-    this.dealCard(this.playerHand);
-    this.dealCard(this.dealerHand);
+  start() {
+    if (this.bet <= 0) return;
+    this.pot -= this.bet;
+    updatePotInStorage(this.pot);
+    this.phase = 'dealing';
   }
 
-  async hit(updateUICallback) {
+  dealInitialCards() {
+    this.dealCard(this.playerHand);
+    this.dealCard(this.dealerHand);
+    this.dealCard(this.playerHand);
+    this.dealCard(this.dealerHand);
+    this.phase = 'playing';
+  }
+
+  async hit(updateStateChange) {
     if (this.phase !== 'playing') return;
 
     await new Promise((resolve) => setTimeout(resolve, 500));
     this.dealCard(this.playerHand);
 
-    if (updateUICallback) updateUICallback();
+    if (updateStateChange) updateStateChange();
 
     if (this.getPlayerScore() > 21) {
       this.hiddenCard = false;
       this.endRound('dealer');
-      if (updateUICallback) updateUICallback();
+      if (updateStateChange) updateStateChange();
     }
   }
 
-  async stand(updateUICallback) {
+  async stand(updateStateChange) {
     if (this.phase !== 'playing') return;
 
     this.hiddenCard = false;
 
-    if (updateUICallback) updateUICallback();
+    if (updateStateChange) updateStateChange();
     await new Promise((r) => setTimeout(r, 500));
 
     while (this.getDealerScore() < 17) {
       this.dealCard(this.dealerHand);
-      if (updateUICallback) updateUICallback();
+      if (updateStateChange) updateStateChange();
       await new Promise((r) => setTimeout(r, 500));
     }
 
@@ -132,7 +154,7 @@ export class BlackjackGame {
     else if (player === dealer) this.endRound('draw');
     else this.endRound('dealer');
 
-    if (updateUICallback) updateUICallback();
+    if (updateStateChange) updateStateChange();
   }
 
   endRound(winner) {
@@ -146,5 +168,6 @@ export class BlackjackGame {
     if (winner === 'draw') {
       this.pot += this.bet;
     }
+    updatePotInStorage(this.pot);
   }
 }

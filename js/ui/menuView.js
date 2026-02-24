@@ -1,11 +1,13 @@
 import {
   getCurrentUser,
+  getCurrentUserPot,
   setCurrentUser,
   updatePotInStorage,
 } from '../services/storage.js';
 
+import { GameBoard } from './components/GameBoard.js';
+
 export function renderMenu(showLogin, showGame) {
-  document.body.classList.remove('login-mode');
   const user = getCurrentUser();
 
   const container = document.createElement('div');
@@ -29,6 +31,7 @@ export function renderMenu(showLogin, showGame) {
   addToPotButton.className = 'menu-button';
   addToPotButton.addEventListener('click', () => {
     updatePotInStorage(100);
+    header.innerText = `Welcome, ${user.name} | Balance: ${getCurrentUserPot()}`;
   });
 
   const startGameButton = document.createElement('button');
@@ -38,6 +41,11 @@ export function renderMenu(showLogin, showGame) {
   startGameButton.addEventListener('click', () => {
     showGame();
   });
+
+  const gameBoardContainer = document.createElement('div');
+  document.body.appendChild(gameBoardContainer);
+
+  const board = GameBoard(gameBoardContainer);
 
   container.append(header, startGameButton, addToPotButton, logoutButton);
 

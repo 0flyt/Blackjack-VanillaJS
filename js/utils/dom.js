@@ -33,3 +33,28 @@ export function renderCard(card, size = 'large') {
   }
   return img;
 }
+
+export function createHandContainer(idPrefix) {
+  const container = document.createElement('div');
+  container.id = `${idPrefix}-container`;
+  container.className = 'hand-container';
+
+  const score = document.createElement('div');
+  score.id = `${idPrefix}-score`;
+  score.className = 'score-tag';
+
+  const hand = document.createElement('div');
+  hand.id = `${idPrefix}-hand`;
+  hand.className = 'hand';
+
+  const cardZone = document.createElement('div');
+  cardZone.className = 'card-zone';
+
+  container.append(score, hand, cardZone);
+
+  return { container, score, hand, cardZone };
+}
+
+export function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
