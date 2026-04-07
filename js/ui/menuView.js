@@ -10,6 +10,7 @@ import { GameBoard } from './components/GameBoard.js';
 export function renderMenu(showLogin, showGame) {
   const user = getCurrentUser();
 
+  document.body.classList.add('login-mode');
   const container = document.createElement('div');
   container.id = 'menu-container';
 
@@ -45,7 +46,7 @@ export function renderMenu(showLogin, showGame) {
   const gameBoardContainer = document.createElement('div');
   document.body.appendChild(gameBoardContainer);
 
-  const board = GameBoard(gameBoardContainer);
+  GameBoard(gameBoardContainer);
 
   container.append(header, startGameButton, addToPotButton, logoutButton);
 

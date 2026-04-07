@@ -23,7 +23,7 @@ const showMenuView = () => {
 
 const showGame = () => {
   app.innerHTML = '';
-  app.appendChild(renderGameView());
+  app.appendChild(renderGameView(showMenuView));
 };
 
 const currentUser = getCurrentUser();

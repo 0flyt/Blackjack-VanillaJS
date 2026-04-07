@@ -50,7 +50,6 @@ export function FooterInfo() {
         break;
       case 'finished':
         text = winner === 'Draw' ? winner : `${winner} won`;
-
         break;
     }
 

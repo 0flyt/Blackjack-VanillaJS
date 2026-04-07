@@ -14,6 +14,10 @@ export function ActionButtons(game, updateUI) {
   playAgain.textContent = 'Play Again';
   playAgain.className = 'game-button';
 
+  const menu = document.createElement('button');
+  menu.textContent = 'Back to menu';
+  menu.className = 'game-button';
+
   hit.onclick = async () => {
     await game.hit(updateUI);
   };
@@ -27,7 +31,11 @@ export function ActionButtons(game, updateUI) {
     updateUI();
   };
 
-  container.append(hit, stand, playAgain);
+  menu.onclick = () => {
+    window.location.reload();
+  };
+
+  container.append(hit, stand, playAgain, menu);
 
   function update(state) {
     hit.style.display = state.phase === 'playing' ? 'inline-block' : 'none';
@@ -36,6 +44,8 @@ export function ActionButtons(game, updateUI) {
 
     playAgain.style.display =
       state.phase === 'finished' ? 'inline-block' : 'none';
+
+    menu.style.display = state.phase === 'finished' ? 'inline-block' : 'none';
   }
 
   return { element: container, update };

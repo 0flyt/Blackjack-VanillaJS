@@ -150,9 +150,9 @@ export class BlackjackGame {
     const dealer = this.getDealerScore();
     const player = this.getPlayerScore();
 
-    if (dealer > 21 || player > dealer) this.endRound('player');
-    else if (player === dealer) this.endRound('draw');
-    else this.endRound('dealer');
+    if (dealer > 21 || player > dealer) this.endRound('Player');
+    else if (player === dealer) this.endRound('Draw');
+    else this.endRound('Dealer');
 
     if (updateStateChange) updateStateChange();
   }
