@@ -41,12 +41,12 @@ export function BetControls(game, updateUI) {
 
   container.append(betContainer, startButton);
 
-  function update(state) {
+  function render(state) {
     container.style.display = state.phase === 'betting' ? 'flex' : 'none';
   }
 
   return {
     element: container,
-    update,
+    render,
   };
 }

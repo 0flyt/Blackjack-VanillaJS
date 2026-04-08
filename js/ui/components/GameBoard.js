@@ -59,12 +59,12 @@ export function GameBoard(container) {
     //   overlay.innerText = '';
     // }
 
-    playerScore.update(
+    playerScore.render(
       state.playerScore,
       state.phase === 'playing' || state.phase === 'finished',
     );
 
-    dealerScore.update(
+    dealerScore.render(
       state.dealerScore,
       state.phase === 'playing' || state.phase === 'finished',
     );

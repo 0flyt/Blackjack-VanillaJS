@@ -37,8 +37,8 @@ export function renderGameView() {
     };
 
     board.render(state);
-    betControls.update(state);
-    actions.update(state);
+    betControls.render(state);
+    actions.render(state);
     footerInfo.render(state);
   }
 

@@ -4,7 +4,7 @@ export function HandScore(type) {
   element.id = `${type}-score`;
   element.style.display = 'none';
 
-  function update(value, visible) {
+  function render(value, visible) {
     element.style.display = visible ? 'block' : 'none';
     element.innerText = visible ? value : '';
     element.style.opacity = visible ? '1' : '0';
@@ -12,6 +12,6 @@ export function HandScore(type) {
 
   return {
     element,
-    update,
+    render,
   };
 }

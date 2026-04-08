@@ -37,7 +37,7 @@ export function ActionButtons(game, updateUI) {
 
   container.append(hit, stand, playAgain, menu);
 
-  function update(state) {
+  function render(state) {
     hit.style.display = state.phase === 'playing' ? 'inline-block' : 'none';
 
     stand.style.display = state.phase === 'playing' ? 'inline-block' : 'none';
@@ -48,5 +48,5 @@ export function ActionButtons(game, updateUI) {
     menu.style.display = state.phase === 'finished' ? 'inline-block' : 'none';
   }
 
-  return { element: container, update };
+  return { element: container, render };
 }
