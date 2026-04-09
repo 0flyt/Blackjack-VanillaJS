@@ -161,11 +161,11 @@ export class BlackjackGame {
     this.phase = 'finished';
     this.result = winner;
 
-    if (winner === 'player') {
+    if (winner === 'Player') {
       this.pot += this.bet * 2;
     }
 
-    if (winner === 'draw') {
+    if (winner === 'Draw') {
       this.pot += this.bet;
     }
     updatePotInStorage(this.pot);
